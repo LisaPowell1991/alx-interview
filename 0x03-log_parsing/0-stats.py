@@ -11,7 +11,6 @@ total_size = 0
 status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
 
 # Define the pattern for the log line
-# Fixed: Use a single line for the regex pattern or proper line continuation
 pattern = (
         r'(\d+\.\d+\.\d+\.\d+) - \[(.+)\] "GET /projects/260 HTTP/1.1" '
         r'(\d+) (\d+)'
@@ -43,7 +42,7 @@ for i, line in enumerate(sys.stdin, start=1):
             pass
 
     # Print metrics every 10 lines
-    if i % 10 == 0:
+    if i != 0 and i % 10 == 0:
         print_metrics()
 
 # Print final metrics
