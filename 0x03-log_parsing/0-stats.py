@@ -1,1 +1,42 @@
 #!/usr/bin/python3
+""" script that reads stdin line by line and computes metrics """
+
+import sys
+import signal
+import re
+
+
+# Initialize metrics
+total_size = 0
+status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+
+# Define the pattern for the log line
+pattern =
+r'(\d+\.\d+\.\d+\.\d+) - \[(.+)\] "GET /projects/260 HTTP/1.1" (\d+) (\d+)'
+
+
+def print_metrics(signum=None, frame=None):
+    """ Function to print metrics """
+    print(f"File size: {total_size}")
+    for code in sorted(status_codes.keys()):
+        if status_codes[code] > 0:
+            print(f"{code}: {status_codes[code]}")
+
+
+# Set the signal handler for SIGINT(CTRL+C)
+signal.signal(signal.SIGINT, print_metrics)
+
+# Read stdin line by line
+for i, line in enumerate(sys.stdin, start=1):
+    match = re.match(pattern, line)
+    if match:
+        # Update metrics
+        total_size += int(match.group(4))
+        status_codes[int(match.group(3))] += 1
+
+    # Print metrics every 10 lines
+    if i % 10 == 0:
+        print_metrics()
+
+# Print final metrics
+print_metrics()
