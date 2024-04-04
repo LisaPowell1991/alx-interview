@@ -20,7 +20,7 @@ def validUTF8(data):
     count = 0
     for num in data:
         if count == 0:
-            if (num >> 5) == 0b110:
+            if (num >> 5) == 0b110 or (num >> 5 == 0b1110):
                 count = 1
             elif (num >> 4) == 0b1110:
                 count = 2
