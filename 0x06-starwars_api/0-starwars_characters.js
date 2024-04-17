@@ -16,21 +16,28 @@ function fetchMovieData (movieId) {
 
     if (response.statusCode !== 200) { return console.log('Failed to fetch data:', response.statusCode); }
 
-    // Printing each character name
-    body.characters.forEach(characterUrl => {
-      fetchCharacterName(characterUrl);
-    });
+    // Fetch each character name using Promise.all to ensure order
+    const characterPromises = body.characters.map(characterUrl => fetchCharacterName(characterUrl));
+    Promise.all(characterPromises)
+      .then(characterNames => {
+        characterNames.forEach(name => console.log(name));
+      })
+      .catch(err => console.log('Error fetching character names:', err));
   });
 }
 
 // Function to fetch character names
 function fetchCharacterName (url) {
-  request(url, { json: true }, (error, response, body) => {
-    if (error) {
-      console.log('Error:', error);
-      return;
-    }
-    console.log(body.name);
+  return new Promise((resolve, reject) => {
+    request(url, { json: true }, (error, response, body) => {
+      if (error) {
+        reject(new Error(error));
+      } else if (response.statusCode !== 200) {
+        reject(new Error(`Failed to fetch character data: status code ${response.statusCode}`));
+      } else {
+        resolve(body.name);
+      }
+    });
   });
 }
 
