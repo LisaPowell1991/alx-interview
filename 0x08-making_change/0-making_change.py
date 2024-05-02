@@ -24,21 +24,18 @@ def makeChange(coins, total):
     # Sort coins in descending order
     coins.sort(reverse=True)
 
-    # Initialise a list to store the min num of coins
-    dp = [float('inf')] * (total + 1)
-    dp[0] = 0
+    # Initialise the num of coins needed
+    num_coins = 0
 
     # Iterate through each coin value
     for coin in coins:
-        # Update dp[i] if using coin reduces total num of coins needed.
-        for i in range(coin, total + 1):
-            # Break out of loop early if coin value is greater than cur total
-            if coin > i:
-                break
-            dp[i] = min(dp[i], dp[i - coin] + 1)
+        while coin <= total:
+            total -= coin
+
+            num_coins += 1
 
     # If total can't be met by any num
-    if dp[total] == float('inf'):
+    if total != 0:
         return -1
 
-    return dp[total]
+    return num_coins
