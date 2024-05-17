@@ -44,6 +44,9 @@ def isWinner(x, nums):
 
     # Simulate each round
     for n in nums:
+        if n == 0:
+            continue
+
         primes = sieve(n)
         turn = 0
 
