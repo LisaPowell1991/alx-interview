@@ -34,6 +34,10 @@ def isWinner(x, nums):
             p += 1
         return [p for p in range(2, n + 1) if primes[p]]
 
+    # If there are no rounds
+    if x == 0 or not nums:
+        return None
+
     # Variables to count the num of wins for Maria and Ben
     mariaWins = 0
     benWins = 0
